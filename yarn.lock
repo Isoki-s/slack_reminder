@@ -6969,7 +6969,7 @@ vuejs-datepicker@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/vuejs-datepicker/-/vuejs-datepicker-1.5.2.tgz#e89e8ec91f1a5c50e229934f47b611fbb8d20e68"
 
-vuetify@^1.0.19:
+vuetify@^1.1.9:
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.1.9.tgz#3eb497cc89d318ee6865bbebd081f5830f83f8ba"
 
