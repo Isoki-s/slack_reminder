@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// 必要なコンポーネントはここに追加
 import {
   Vuetify,
   VApp,
@@ -9,7 +10,8 @@ import {
   VIcon,
   VGrid,
   VToolbar,
-  transitions
+  transitions,
+  VDatePicker,
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
 
@@ -23,7 +25,8 @@ Vue.use(Vuetify, {
     VIcon,
     VGrid,
     VToolbar,
-    transitions
+    transitions,
+    VDatePicker
   },
   theme: {
     primary: '#ee44aa',
