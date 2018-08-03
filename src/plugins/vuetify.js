@@ -12,6 +12,9 @@ import {
   VToolbar,
   transitions,
   VDatePicker,
+  VTextField,
+  VDialog,
+  VMenu,
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
 
@@ -26,7 +29,10 @@ Vue.use(Vuetify, {
     VGrid,
     VToolbar,
     transitions,
-    VDatePicker
+    VDatePicker,
+    VTextField,
+    VDialog,
+    VMenu,
   },
   theme: {
     primary: '#ee44aa',
