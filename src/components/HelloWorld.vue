@@ -5,7 +5,7 @@
         v-text-field(
           v-model="name"
           :error-messages="nameErrors"
-          :counter="10"
+          :counter="100"
           label="Name"
           required
           @input="$v.name.$touch()"
