@@ -26,7 +26,7 @@
           v-text-field(
             slot="activator"
             v-model="date"
-            label="Picker without buttons"
+            label="いつやんねん"
             prepend-icon="event"
             readonly
           )

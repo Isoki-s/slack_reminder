@@ -34,7 +34,7 @@ export default {
       drawer: false,
       fixed: false,
       miniVariant: false,
-      title: 'LOGO'
+      title: 'Slack Reminder'
     }
   }
 }
