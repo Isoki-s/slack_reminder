@@ -2,19 +2,19 @@
   v-app
     Header
     v-content
-      HelloWorld
+      Content
     Footer
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import Content from './components/Content'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    Content,
     Header,
     Footer
   },
