@@ -7,15 +7,48 @@ v-container(fluid fill-height)
           v-toolbar-title Slack Reminder
         v-card-text
           v-form
+            //- SELECT[me,someone,@here]
+            v-select(
+              prepend-icon="people"
+              :items="items"
+              v-model="item"
+              :error-messages="itemErrors"
+              label="誰に?"
+              required
+              @input="$v.item.$touch()"
+              @blur="$v.item.$touch()"
+            )
             v-text-field(
+              v-if="item == 'someone'"
               prepend-icon="person"
               v-model="name"
               :error-messages="nameErrors"
               :counter="100"
-              label="誰に？ @taro"
+              label="アカウント名は？ 例:taro"
               required
               @input="$v.name.$touch()"
               @blur="$v.name.$touch()"
+            )
+            v-text-field(
+              prepend-icon="question_answer"
+              v-model="todo"
+              :error-messages="todoErrors"
+              label="なにを？"
+              placeholder="今日はレビューミーティングです"
+              required
+              @input="$v.todo.$touch()"
+              @blur="$v.todo.$touch()"
+            )
+            //- SELECT[経過時間指定,時刻指定,日付指定,毎週の繰り返し設定,隔週の繰り返し設定]
+            v-select(
+              prepend-icon="time"
+              :items="whenlist"
+              v-model="when"
+              :error-messages="whenErrors"
+              label="いつ"
+              required
+              @input="$v.when.$touch()"
+              @blur="$v.when.$touch()"
             )
             v-menu(
               ref="menu"
@@ -38,6 +71,12 @@ v-container(fluid fill-height)
               )
               v-date-picker(v-model="date" @input="$refs.menu.save(date)")
         v-card-actions
+          //- 誰かに通知する時
+          div(v-if="item == 'someone'")
+            p#copy /remind @{{ name }} "{{ todo }}" {{ time }}
+          //- それ以外の通知 me or @here
+          div(v-else)
+            p#copy /remind {{ item }} "{{ todo }}" {{ time }}
           v-spacer
           v-btn(color="primary") copy
 </template>
@@ -47,18 +86,27 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String,
-    source: String
-  },
   data () {
     return {
+      selectedDate: new Date(),
       drawer: null,
       date: null,
       menu: false,
       modal: false,
       name: '',
+      todo: '',
+      items: [
+        'me',
+        'someone',
+        '@here',
+      ],
+      whenlist: [
+        '経過時間指定',
+        '時刻指定',
+        '日付指定',
+        '毎週の繰り返し設定',
+        '隔週の繰り返し設定',
+      ],
     }
   },
 
@@ -66,14 +114,35 @@ export default {
 
     validations: {
       name: { required, maxLength: maxLength(100) },
+      todo: { required },
+      item: { required },
+      whenlist: { required },
     },
 
     computed: {
+      itemErrors () {
+        const errors = []
+        if (!this.$v.item.$dirty) return errors
+        !this.$v.item.required && errors.push('どいつ？')
+        return errors
+      },
+      whenErrors () {
+        const errors = []
+        if (!this.$v.whenlist.$dirty) return errors
+        !this.$v.whenlist.required && errors.push('いつや？')
+        return errors
+      },
       nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
         !this.$v.name.maxLength && errors.push('名前長すぎやろ')
         !this.$v.name.required && errors.push('いや、誰に通知すんねん')
+        return errors
+      },
+      todoErrors () {
+        const errors = []
+        if (!this.$v.todo.$dirty) return errors
+        !this.$v.todo.required && errors.push('なに、すんねん')
         return errors
       }
     },
@@ -85,13 +154,13 @@ export default {
       clear () {
         this.$v.$reset()
         this.name = ''
+        this.todo = ''
+        this.item = ''
       }
     }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
 h1, h2
   font-weight normal
