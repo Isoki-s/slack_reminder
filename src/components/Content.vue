@@ -40,7 +40,7 @@ v-container(fluid fill-height)
             )
             //- SELECT[経過時間指定,時刻指定,日付指定,毎週の繰り返し設定,隔週の繰り返し設定]
             v-select(
-              prepend-icon="time"
+              prepend-icon="watch_later"
               :items="whenlist"
               v-model="when"
               :error-messages="whenErrors"
@@ -96,12 +96,13 @@ v-container(fluid fill-height)
         v-card-actions
           //- 誰かに通知する時
           div(v-if="item == 'someone'")
-            p#copy /remind @{{ name }} "{{ todo }}" at {{ time }}
+            p#result /remind @{{ name }} "{{ todo }}" at {{ time }}
           //- それ以外の通知 me or @here
           div(v-else)
-            p#copy /remind {{ item }} "{{ todo }}" at {{ time }}
+            p#result /remind {{ item }} "{{ todo }}" at {{ time }}
           v-spacer
-          v-btn(color="primary") copy
+          v-btn.btn(color="primary" data-clipboard-target="#result") copy
+          v-btn(color="primary" @click="clear") clear
 </template>
 
 <script>
@@ -142,7 +143,7 @@ export default {
       todo: { required },
       item: { required },
       whenlist: { required },
-      timer: { required },
+      time: { required },
     },
 
     computed: {
@@ -154,8 +155,8 @@ export default {
       },
       timerErrors () {
         const errors = []
-        if (!this.$v.timer.$dirty) return errors
-        !this.$v.timer.required && errors.push('時刻指定せい')
+        if (!this.$v.time.$dirty) return errors
+        !this.$v.time.required && errors.push('時刻指定せい')
         return errors
       },
       whenErrors () {
@@ -180,14 +181,13 @@ export default {
     },
 
     methods: {
-      submit () {
-        this.$v.$touch()
-      },
       clear () {
         this.$v.$reset()
         this.name = ''
         this.todo = ''
-        this.item = ''
+        this.items = ''
+        this.timer = ''
+        this.whenlist = ''
       }
     }
 }
