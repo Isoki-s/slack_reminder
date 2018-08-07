@@ -39,7 +39,7 @@ v-container(fluid fill-height)
               v-date-picker(v-model="date" @input="$refs.menu.save(date)")
         v-card-actions
           v-spacer
-          v-btn(color="primary") Login
+          v-btn(color="primary") copy
 </template>
 
 <script>
