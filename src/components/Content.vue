@@ -24,7 +24,7 @@ v-container(fluid fill-height)
               v-model="name"
               :error-messages="nameErrors"
               :counter="100"
-              label="アカウント名は？ 例:taro"
+              label="アカウント名は？ 例：taro"
               required
               @input="$v.name.$touch()"
               @blur="$v.name.$touch()"
@@ -33,8 +33,7 @@ v-container(fluid fill-height)
               prepend-icon="question_answer"
               v-model="todo"
               :error-messages="todoErrors"
-              label="なにを？"
-              placeholder="今日はレビューミーティングです"
+              label="なにを？ 例：レビューミーティング"
               required
               @input="$v.todo.$touch()"
               @blur="$v.todo.$touch()"
@@ -50,33 +49,57 @@ v-container(fluid fill-height)
               @input="$v.when.$touch()"
               @blur="$v.when.$touch()"
             )
-            v-menu(
-              ref="menu"
-              :close-on-content-click="false"
-              v-model="menu"
-              :nudge-right="40"
-              :return-value.sync="date"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              min-width="290px"
-            )
-              v-text-field(
-                slot="activator"
-                v-model="date"
-                label="いつやんねん"
-                prepend-icon="event"
-                readonly
+            div#whenselect(v-if="when == '日付指定'")
+              v-menu(
+                ref="menu"
+                :close-on-content-click="false"
+                v-model="menu"
+                :nudge-right="40"
+                :return-value.sync="date"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                min-width="290px"
               )
-              v-date-picker(v-model="date" @input="$refs.menu.save(date)")
+                v-text-field(
+                  slot="activator"
+                  v-model="date"
+                  label="いつやんねん"
+                  prepend-icon="event"
+                  readonly
+                )
+                v-date-picker(v-model="date" @input="$refs.menu.save(date)")
+            div#whenselect(v-if="when == '時刻指定'")
+              //- Selectが時刻指定の時
+              v-menu(
+                ref="menu"
+                :close-on-content-click="false"
+                v-model="timer"
+                :nudge-right="40"
+                :return-value.sync="time"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                max-width="290px"
+                min-width="290px"
+              )
+                v-text-field(
+                  slot="activator"
+                  v-model="time"
+                  label="時刻指定"
+                  prepend-icon="access_time"
+                  readonly
+                )
+                v-time-picker(v-if="timer" v-model="time" format="24hr" @change="$refs.menu.save(time)")
         v-card-actions
           //- 誰かに通知する時
           div(v-if="item == 'someone'")
-            p#copy /remind @{{ name }} "{{ todo }}" {{ time }}
+            p#copy /remind @{{ name }} "{{ todo }}" at {{ time }}
           //- それ以外の通知 me or @here
           div(v-else)
-            p#copy /remind {{ item }} "{{ todo }}" {{ time }}
+            p#copy /remind {{ item }} "{{ todo }}" at {{ time }}
           v-spacer
           v-btn(color="primary") copy
 </template>
@@ -95,6 +118,8 @@ export default {
       modal: false,
       name: '',
       todo: '',
+      times: null,
+      timer: false,
       items: [
         'me',
         'someone',
@@ -117,6 +142,7 @@ export default {
       todo: { required },
       item: { required },
       whenlist: { required },
+      timer: { required },
     },
 
     computed: {
@@ -124,6 +150,12 @@ export default {
         const errors = []
         if (!this.$v.item.$dirty) return errors
         !this.$v.item.required && errors.push('どいつ？')
+        return errors
+      },
+      timerErrors () {
+        const errors = []
+        if (!this.$v.timer.$dirty) return errors
+        !this.$v.timer.required && errors.push('時刻指定せい')
         return errors
       },
       whenErrors () {
