@@ -1,11 +1,9 @@
 module.exports = {
   baseUrl: '/slack_reminder',
   outputDir: 'docs',
-  assetsDir: 'asset',
+  assetsDir: undefined,
   runtimeCompiler: undefined,
   productionSourceMap: undefined,
   parallel: undefined,
-  css: {
-    modules: true
-  }
+  css: undefined
 }
