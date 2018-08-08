@@ -164,5 +164,12 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus">
+
+.v-toolbar
+  text-align center
+  
+  &__title
+    font-family Pacifico
+
 </style>
