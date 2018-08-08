@@ -84,20 +84,36 @@ v-container(fluid fill-height)
                 v-time-picker(v-if="timer" v-model="time" format="24hr" @change="$refs.menu.save(time)")
         v-card-actions
           //- 誰かに通知する時
-          div(v-if="item == 'someone'")
-            p#result1 /remind @{{ name }} "{{ todo }}" at {{ time }}
+          v-flex(xs12 sm8 md4 v-if="item == 'someone'")
+            p#result /remind @{{ name }} "{{ todo }}" at {{ time }}
           //- それ以外の通知 me or @here
-          div(v-else)
-            p#result2 /remind {{ item }} "{{ todo }}" at {{ time }}
-          v-spacer
-          v-btn(class="btn" color="primary" data-clipboard-target="#result1") copy
-          v-btn(class="btn" color="primary" data-clipboard-target="#result") copy
+          v-flex(xs12 sm8 md4 v-else)
+            p#result /remind {{ item }} "{{ todo }}" at {{ time }}
+        v-spacer
+        v-layout(align-end justify-end row)
+          v-btn(class="btn" color="primary" data-clipboard-target="#result" @click="snackbar = true") copy
           v-btn(color="primary" @click="clear") clear
+        v-snackbar(
+          v-model="snackbar"
+          color="cyan darken-2"
+          :timeout="timeout"
+          :vertical="mode === 'vertical'"
+        ) Copied
+          v-btn(
+            dark
+            flat
+            @click="snackbar = false"
+          ) Close
 </template>
 
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength } from 'vuelidate/lib/validators'
+
+new Vue({
+  el: '#app'
+})
+new Clipboard('.btn');
 
 export default {
   data () {
@@ -113,13 +129,18 @@ export default {
       timer: false,
       item: '',
       when:'',
+      result:'',
+      snackbar: false,
+      color: '',
+      mode: '',
+      timeout: 3000,
       items: [
         'me',
         'someone',
         '@here',
       ],
       whenlist: [
-        '経過時間指定',
+        // '経過時間指定',
         '時刻指定',
         '日付指定',
         '毎週の繰り返し設定',
@@ -164,12 +185,11 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" conputed>
 
 .v-toolbar
-  text-align center
-  
   &__title
     font-family Pacifico
+    font-size 24px
 
 </style>
