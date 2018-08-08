@@ -12,7 +12,7 @@ v-container(fluid fill-height)
               prepend-icon="people"
               :items="items"
               v-model="item"
-              label="誰に?"
+              label="Who"
               required
             )
             v-text-field(
@@ -21,13 +21,13 @@ v-container(fluid fill-height)
               v-model="name"
               :error-messages="nameErrors"
               :counter="100"
-              label="アカウント名は？ 例：taro"
+              label="Account 例：taro"
               required
             )
             v-text-field(
               prepend-icon="question_answer"
               v-model="todo"
-              label="なにを？ 例：レビューミーティング"
+              label="Message"
               required
             )
             //- SELECT[経過時間指定,時刻指定,日付指定,毎週の繰り返し設定,隔週の繰り返し設定]
@@ -35,7 +35,7 @@ v-container(fluid fill-height)
               prepend-icon="watch_later"
               :items="whenlist"
               v-model="when"
-              label="いつ"
+              label="When?"
               required
             )
             div#whenselect(v-if="when == '日付指定'")
@@ -54,7 +54,7 @@ v-container(fluid fill-height)
                 v-text-field(
                   slot="activator"
                   v-model="date"
-                  label="いつやんねん"
+                  label="いつ？"
                   prepend-icon="event"
                   readonly
                 )
@@ -84,11 +84,13 @@ v-container(fluid fill-height)
                 v-time-picker(v-if="timer" v-model="time" format="24hr" @change="$refs.menu.save(time)")
         v-card-actions
           //- 誰かに通知する時
-          v-flex(xs12 sm8 md4 v-if="item == 'someone'")
-            p#result /remind @{{ name }} "{{ todo }}" at {{ time }}
+          v-flex(xs12 v-if="item == 'someone'")
+            p#result(v-if="when == '時刻指定'") /remind @{{ name }} "{{ todo }}" at {{ time }}
+            p#result(v-else="when == '日付指定'") /remind @{{ name }} "{{ todo }}" on {{ date | moment("MMMM D")}}
           //- それ以外の通知 me or @here
-          v-flex(xs12 sm8 md4 v-else)
-            p#result /remind {{ item }} "{{ todo }}" at {{ time }}
+          v-flex(xs12 v-else)
+            p#result(v-if="when == '時刻指定'") /remind {{ item }} "{{ todo }}" at {{ time }}
+            p#result(v-else="when == '日付指定'") /remind {{ item }} "{{ todo }}" on {{ date | moment("MMMM D")}}
         v-spacer
         v-layout(align-end justify-end row)
           v-btn(class="btn" color="primary" data-clipboard-target="#result" @click="snackbar = true") copy
@@ -143,8 +145,8 @@ export default {
         // '経過時間指定',
         '時刻指定',
         '日付指定',
-        '毎週の繰り返し設定',
-        '隔週の繰り返し設定',
+        // '毎週の繰り返し設定',
+        // '隔週の繰り返し設定',
       ],
     }
   },
