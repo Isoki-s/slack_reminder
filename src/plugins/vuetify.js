@@ -19,6 +19,7 @@ import {
   VMenu,
   VCard,
   VForm,
+  VSnackbar,
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
 
@@ -41,6 +42,7 @@ Vue.use(Vuetify, {
     VMenu,
     VCard,
     VForm,
+    VSnackbar,
   },
   theme: {
     primary: '#1976D2',
