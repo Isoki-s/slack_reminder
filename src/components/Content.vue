@@ -12,11 +12,8 @@ v-container(fluid fill-height)
               prepend-icon="people"
               :items="items"
               v-model="item"
-              :error-messages="itemErrors"
               label="誰に?"
               required
-              @input="$v.item.$touch()"
-              @blur="$v.item.$touch()"
             )
             v-text-field(
               v-if="item == 'someone'"
@@ -26,28 +23,20 @@ v-container(fluid fill-height)
               :counter="100"
               label="アカウント名は？ 例：taro"
               required
-              @input="$v.name.$touch()"
-              @blur="$v.name.$touch()"
             )
             v-text-field(
               prepend-icon="question_answer"
               v-model="todo"
-              :error-messages="todoErrors"
               label="なにを？ 例：レビューミーティング"
               required
-              @input="$v.todo.$touch()"
-              @blur="$v.todo.$touch()"
             )
             //- SELECT[経過時間指定,時刻指定,日付指定,毎週の繰り返し設定,隔週の繰り返し設定]
             v-select(
               prepend-icon="watch_later"
               :items="whenlist"
               v-model="when"
-              :error-messages="whenErrors"
               label="いつ"
               required
-              @input="$v.when.$touch()"
-              @blur="$v.when.$touch()"
             )
             div#whenselect(v-if="when == '日付指定'")
               v-menu(
@@ -96,12 +85,13 @@ v-container(fluid fill-height)
         v-card-actions
           //- 誰かに通知する時
           div(v-if="item == 'someone'")
-            p#result /remind @{{ name }} "{{ todo }}" at {{ time }}
+            p#result1 /remind @{{ name }} "{{ todo }}" at {{ time }}
           //- それ以外の通知 me or @here
           div(v-else)
-            p#result /remind {{ item }} "{{ todo }}" at {{ time }}
+            p#result2 /remind {{ item }} "{{ todo }}" at {{ time }}
           v-spacer
-          v-btn.btn(color="primary" data-clipboard-target="#result") copy
+          v-btn(class="btn" color="primary" data-clipboard-target="#result1") copy
+          v-btn(class="btn" color="primary" data-clipboard-target="#result") copy
           v-btn(color="primary" @click="clear") clear
 </template>
 
@@ -119,8 +109,10 @@ export default {
       modal: false,
       name: '',
       todo: '',
-      times: null,
+      time: null,
       timer: false,
+      item: '',
+      when:'',
       items: [
         'me',
         'someone',
@@ -141,30 +133,9 @@ export default {
     validations: {
       name: { required, maxLength: maxLength(100) },
       todo: { required },
-      item: { required },
-      whenlist: { required },
-      time: { required },
     },
 
     computed: {
-      itemErrors () {
-        const errors = []
-        if (!this.$v.item.$dirty) return errors
-        !this.$v.item.required && errors.push('どいつ？')
-        return errors
-      },
-      timerErrors () {
-        const errors = []
-        if (!this.$v.time.$dirty) return errors
-        !this.$v.time.required && errors.push('時刻指定せい')
-        return errors
-      },
-      whenErrors () {
-        const errors = []
-        if (!this.$v.whenlist.$dirty) return errors
-        !this.$v.whenlist.required && errors.push('いつや？')
-        return errors
-      },
       nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
@@ -185,9 +156,9 @@ export default {
         this.$v.$reset()
         this.name = ''
         this.todo = ''
-        this.items = ''
-        this.timer = ''
-        this.whenlist = ''
+        this.item = ''
+        this.time = ''
+        this.when = ''
       }
     }
 }
