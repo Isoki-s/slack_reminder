@@ -59,7 +59,7 @@ v-container(fluid fill-height)
                   readonly
                 )
                 v-date-picker(v-model="date" @input="$refs.menu.save(date)")
-            div#whenselect(v-if="when == '時刻指定'")
+            div#whenselect
               //- Selectが時刻指定の時
               v-menu(
                 ref="menu"
@@ -86,11 +86,11 @@ v-container(fluid fill-height)
           //- 誰かに通知する時
           v-flex(xs12 v-if="item == 'someone'")
             p#result(v-if="when == '時刻指定'") /remind @{{ name }} "{{ todo }}" at {{ time }}
-            p#result(v-else="when == '日付指定'") /remind @{{ name }} "{{ todo }}" on {{ date | moment("MMMM D")}}
+            p#result(v-else="when == '日付指定'") /remind @{{ name }} "{{ todo }}" on {{ date | moment("MMMM D")}} at {{ time }}
           //- それ以外の通知 me or @here
           v-flex(xs12 v-else)
             p#result(v-if="when == '時刻指定'") /remind {{ item }} "{{ todo }}" at {{ time }}
-            p#result(v-else="when == '日付指定'") /remind {{ item }} "{{ todo }}" on {{ date | moment("MMMM D")}}
+            p#result(v-else="when == '日付指定'") /remind {{ item }} "{{ todo }}" on {{ date | moment("MMMM D")}} at {{ time }}
         v-spacer
         v-layout(align-end justify-end row)
           v-btn(class="btn" color="primary" data-clipboard-target="#result" @click="snackbar = true") copy
@@ -111,11 +111,6 @@ v-container(fluid fill-height)
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength } from 'vuelidate/lib/validators'
-
-new Vue({
-  el: '#app'
-})
-new Clipboard('.btn');
 
 export default {
   data () {
@@ -180,8 +175,8 @@ export default {
         this.name = ''
         this.todo = ''
         this.item = ''
-        this.time = ''
-        this.when = ''
+        this.time = null
+        this.when = Date.now()
       }
     }
 }
