@@ -40,7 +40,7 @@ v-container(fluid fill-height)
             )
             div#whenselect(v-if="when == '日付指定'")
               v-menu(
-                ref="menu"
+                ref="menu1"
                 :close-on-content-click="false"
                 v-model="menu"
                 :nudge-right="40"
@@ -58,11 +58,11 @@ v-container(fluid fill-height)
                   prepend-icon="event"
                   readonly
                 )
-                v-date-picker(v-model="date" @input="$refs.menu.save(date)")
+                v-date-picker(v-model="date" @input="$refs.menu1.save(date)")
             div#whenselect
               //- Selectが時刻指定の時
               v-menu(
-                ref="menu"
+                ref="menu2"
                 :close-on-content-click="false"
                 v-model="timer"
                 :nudge-right="40"
@@ -81,7 +81,7 @@ v-container(fluid fill-height)
                   prepend-icon="access_time"
                   readonly
                 )
-                v-time-picker(v-if="timer" v-model="time" format="24hr" @change="$refs.menu.save(time)")
+                v-time-picker(v-if="timer" v-model="time" format="24hr" @change="$refs.menu2.save(time)")
         v-card-actions
           //- 誰かに通知する時
           v-flex(xs12 v-if="item == 'someone'")
