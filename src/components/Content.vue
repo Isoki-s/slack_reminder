@@ -112,6 +112,9 @@ v-container(fluid fill-height)
 import { validationMixin } from 'vuelidate'
 import { required, maxLength } from 'vuelidate/lib/validators'
 
+/* eslint-disable */
+new Clipboard('.btn')
+
 export default {
   data () {
     return {
