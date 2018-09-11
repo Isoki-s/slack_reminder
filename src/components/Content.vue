@@ -23,12 +23,17 @@ v-container(fluid fill-height)
               :counter="100"
               label="Account 例：taro"
               required
+              @input="$v.name.$touch()"
+              @blur="$v.name.$touch()"
             )
             v-text-field(
               prepend-icon="question_answer"
               v-model="todo"
+              :error-messages="todoErrors"
               label="Message"
               required
+              @input="$v.todo.$touch()"
+              @blur="$v.todo.$touch()"
             )
             //- SELECT[経過時間指定,時刻指定,日付指定,毎週の繰り返し設定,隔週の繰り返し設定]
             v-select(
@@ -167,7 +172,7 @@ export default {
       todoErrors () {
         const errors = []
         if (!this.$v.todo.$dirty) return errors
-        !this.$v.todo.required && errors.push('なに、すんねん')
+        !this.$v.todo.required && errors.push('なに、リマインドすんねん')
         return errors
       }
     },
