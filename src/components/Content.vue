@@ -92,7 +92,7 @@ v-container(fluid fill-height)
           v-flex(xs12 v-if="item == 'someone'")
             p#result(v-if="when == '時刻指定'") /remind @{{ name }} "{{ todo }}" at {{ time }}
             p#result(v-else="when == '日付指定'") /remind @{{ name }} "{{ todo }}" on {{ date | moment("MMMM D")}} at {{ time }}
-          //- それ以外の通知 me or @here
+          //- それ以外の通知 me or @here or @channel
           v-flex(xs12 v-else)
             p#result(v-if="when == '時刻指定'") /remind {{ item }} "{{ todo }}" at {{ time }}
             p#result(v-else="when == '日付指定'") /remind {{ item }} "{{ todo }}" on {{ date | moment("MMMM D")}} at {{ time }}
@@ -143,6 +143,7 @@ export default {
         'me',
         'someone',
         '@here',
+        '@channel',
       ],
       whenlist: [
         // '経過時間指定',
